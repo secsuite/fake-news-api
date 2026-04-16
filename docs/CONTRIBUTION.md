@@ -55,7 +55,7 @@ Integration tests are intentionally excluded from local pre-push.
 1. Create a branch from `master`.
 2. Run `make quality` locally (or rely on `pre-push`).
 3. Open PR to `master`.
-4. Wait for `Quality Gates` and `Integration Tests` checks to pass.
+4. Wait for `Quality Gates` check to pass.
 5. Merge after checks pass.
 
 Self-merge can be enabled while still requiring status checks.
