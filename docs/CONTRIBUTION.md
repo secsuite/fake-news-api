@@ -8,10 +8,10 @@
 
 ## Local Quality Gates
 
-Install development tooling and git hooks:
+Install runtime and quality-gate tooling:
 
 ```bash
-make install-dev
+make install-runtime
 ```
 
 This installs both `pre-commit` and `pre-push` hooks:
@@ -19,11 +19,10 @@ This installs both `pre-commit` and `pre-push` hooks:
 - `pre-commit`: lightweight hygiene hooks only.
 - `pre-push`: runs `make quality` and blocks push on failure.
 
-For fast local checks without runtime/model dependencies:
+Install heavy ML/train dependencies only when needed:
 
 ```bash
-make install-dev-lite
-make quality-lite
+make install-train
 ```
 
 ## Tests
@@ -47,10 +46,6 @@ make quality
 ```
 
 Lightweight quality command (format + lint + type-check only):
-
-```bash
-make quality-lite
-```
 
 `make quality` runs format check + lint + type-check + `test-fast` only.
 Integration tests are intentionally excluded from local pre-push.

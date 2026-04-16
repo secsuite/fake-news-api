@@ -7,17 +7,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-from transformers import AutoTokenizer, pipeline
-
 from app.config import settings
-
-try:
-    from optimum.onnxruntime import ORTModelForSequenceClassification
-except ImportError as exc:  # pragma: no cover - integration/runtime dependency guard
-    raise RuntimeError(
-        "optimum[onnxruntime] is required for fake-news inference. "
-        "Install dependencies from requirements.txt."
-    ) from exc
 
 
 class FakeNewsPredictor:
@@ -29,6 +19,15 @@ class FakeNewsPredictor:
         self._pipeline = None
 
     def _build_pipeline(self) -> Any:
+        try:
+            from optimum.onnxruntime import ORTModelForSequenceClassification
+            from transformers import AutoTokenizer, pipeline
+        except ImportError as exc:  # pragma: no cover - integration/runtime dependency guard
+            raise RuntimeError(
+                "Training/inference dependencies are required for fake-news inference. "
+                "Run 'make install-train'."
+            ) from exc
+
         tokenizer = AutoTokenizer.from_pretrained(str(self.model_dir))
         model = ORTModelForSequenceClassification.from_pretrained(
             str(self.model_dir),
