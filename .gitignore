@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtualenvs
+.venv/
+venv/
+.envrc
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Tooling
+.coverage
+htmlcov/
+
+# macOS
+.DS_Store
+
+# Local model artifacts (fetched from GCS in CI/deploy)
+app/ml/models/fake_news/*
+fakenews_onnx_model/

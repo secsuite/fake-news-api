@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fake-news-api"
+version = "0.1.0"
+description = "FastAPI service for fake-news classification with ONNX inference."
+readme = "docs/README.md"
+authors = [
+    { name = "SecSuite" }
+]
+license = { text = "AGPL-3.0" }
+requires-python = ">=3.12"
+
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.6.0",
+    "pydantic-settings>=2.1.0",
+    "python-dotenv>=1.0.0",
+    "transformers>=4.41.0",
+    "optimum[onnxruntime]>=1.21.4",
+    "onnxruntime>=1.19.2",
+    "numpy>=1.26.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==24.10.0",
+    "ruff==0.6.8",
+    "mypy>=1.10.0",
+    "pytest>=8.0.0",
+    "pytest-xdist>=3.6.1",
+    "pre-commit>=3.7.0",
+    "httpx>=0.27.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/secsuite"
+Repository = "https://github.com/secsuite/fake-news-api.git"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: integration tests with real model inference and secrets",
+    "requires_integration_secret: skip if FAKE_NEWS_INTEGRATION_TEXT is not set",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["app", "tests"]
+ignore_missing_imports = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+warn_unused_ignores = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_return_any = false
+no_implicit_optional = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+
+[tool.setuptools.packages.find]
+include = ["app*"]
