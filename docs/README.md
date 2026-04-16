@@ -11,24 +11,17 @@
 make install-runtime
 ```
 
+Install model/train dependencies when needed:
+
+```bash
+make install-train
+```
+
 Run the API locally:
 
 ```bash
 source .venv/bin/activate
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
-```
-
-### Development setup
-
-```bash
-make install-dev
-```
-
-Fast checks without runtime ML dependencies:
-
-```bash
-make install-dev-lite
-make quality-lite
 ```
 
 Full local quality checks (includes tests):
@@ -58,6 +51,6 @@ curl http://localhost:8080/health
 ```
 
 The Docker image uses a multi-stage build:
-- `builder` installs Python dependencies from `requirements.txt`.
+- `builder` installs Python dependencies from `requirements.txt` and `requirements-train.txt`.
 - `runtime` copies only the virtual environment and application files.
 - No `dev` extras are installed in the final image.

@@ -18,7 +18,7 @@ async def analyze_news(
 ) -> NewsAnalysisResponse:
     try:
         result = predictor.analyze(request.text)
-        return NewsAnalysisResponse(**result)
+        return NewsAnalysisResponse.model_validate(result)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - runtime protection

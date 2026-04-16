@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -22,7 +23,7 @@ def pytest_configure(config: pytest.Config) -> None:
 
 
 @pytest.fixture(scope="session")
-def client() -> TestClient:
+def client() -> Generator[TestClient, None, None]:
     from app.main import app
 
     with TestClient(app, raise_server_exceptions=True) as test_client:

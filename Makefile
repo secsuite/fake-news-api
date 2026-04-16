@@ -3,37 +3,29 @@ PYTHON := $(VENV)/bin/python
 BLACK := $(VENV)/bin/black
 RUFF := $(VENV)/bin/ruff
 MYPY := $(VENV)/bin/mypy
-PYTEST := $(VENV)/bin/pytest
+PYTEST := $(PYTHON) -m pytest
 PRE_COMMIT := $(VENV)/bin/pre-commit
 PYTEST_WORKERS ?= 1
+TORCH_INDEX_URL ?= https://download.pytorch.org/whl/cpu
 
-.PHONY: install-runtime install-dev-lite install-dev quality-lite quality quality-fix test-fast test-integration precommit
+.PHONY: install-runtime install-train quality quality-fix test-fast test-integration precommit
 
 install-runtime:
 	python3 -m venv $(VENV)
 	$(PYTHON) -m pip install --upgrade pip
 	$(PYTHON) -m pip install -r requirements.txt
-
-install-dev-lite:
-	python3 -m venv $(VENV)
-	$(PYTHON) -m pip install --upgrade pip
-	$(PYTHON) -m pip install \
-		black==24.10.0 \
-		ruff==0.6.8 \
-		mypy>=1.10.0 \
-		pre-commit>=3.7.0
-
-install-dev: install-runtime
-	$(PYTHON) -m pip install -e ".[dev]"
 	$(PRE_COMMIT) install --hook-type pre-commit --hook-type pre-push
+	$(PRE_COMMIT) install-hooks
 
-quality-lite:
+install-train:
+	@test -x "$(PYTHON)" || (echo "Missing $(PYTHON). Run 'make install-runtime' first." && exit 1)
+	$(PYTHON) -m pip install --index-url $(TORCH_INDEX_URL) --extra-index-url https://pypi.org/simple torch
+	$(PYTHON) -m pip install --extra-index-url $(TORCH_INDEX_URL) -r requirements-train.txt
+
+quality:
 	$(BLACK) --check app tests
 	$(RUFF) check app tests
 	$(MYPY) app tests
-
-quality:
-	$(MAKE) quality-lite
 	$(MAKE) test-fast
 
 quality-fix:

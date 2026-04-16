@@ -9,13 +9,13 @@ ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
 
 WORKDIR /build
 
-COPY requirements.txt ./requirements.txt
+COPY requirements.txt requirements-train.txt ./
 
 RUN python -m venv /opt/venv
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip \
     && pip install --no-cache-dir --index-url ${TORCH_INDEX_URL} --extra-index-url https://pypi.org/simple torch \
-    && pip install --no-cache-dir --extra-index-url ${TORCH_INDEX_URL} -r requirements.txt
+    && pip install --no-cache-dir --extra-index-url ${TORCH_INDEX_URL} -r requirements.txt -r requirements-train.txt
 
 FROM python:3.12-slim AS runtime
 
